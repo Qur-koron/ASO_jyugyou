@@ -1,0 +1,4 @@
+﻿  main.cpp
+D:\Users\2216002\Desktop\数学\SmpleProject1\SmpleProject1\main.cpp(73,59): warning C4244: '-=': 'double' から 'float' への変換です。データが失われる可能性があります。
+D:\Users\2216002\Desktop\数学\SmpleProject1\SmpleProject1\main.cpp(74,59): warning C4244: '-=': 'double' から 'float' への変換です。データが失われる可能性があります。
+  SmpleProject1.vcxproj -> D:\Users\2216002\Desktop\数学\SmpleProject1\x64\Debug\SmpleProject1.exe
