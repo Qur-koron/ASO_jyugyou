@@ -132,7 +132,6 @@ void ShotBase::Draw()
 void ShotBase::DrawShot(void)
 {
     MV1DrawModel(modelId_);
-
 }
 
 void ShotBase::DrawBlast(void)
@@ -149,7 +148,6 @@ void ShotBase::DrawEnd(void)
 void ShotBase::Release(void)
 {
     MV1DeleteModel(modelId_);
-
 }
 
 bool ShotBase::IsShot(void)

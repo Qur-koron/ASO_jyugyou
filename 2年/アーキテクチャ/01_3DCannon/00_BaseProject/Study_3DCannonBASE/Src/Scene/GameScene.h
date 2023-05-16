@@ -26,13 +26,15 @@ public:
 
 private:
 
-	// ゲームオーバー地点
-	VECTOR gameoverPoint_;
 	// ゲームオーバー判定
 	bool isGameover_;
 	// ゲームオーバー画像
 	int imgGameover_;
 
+	// ゲームオーバー地点
+	VECTOR gameoverPoint_;
+
+	// ポインター
 	Stage* stage_;
 	Cannon* cannon_;
 

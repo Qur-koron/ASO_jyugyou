@@ -25,8 +25,11 @@ bool IsHit(const Rect& rcA, const Rect& rcB)
 
 bool IsHit(const Circle& cA, const Circle& cB)
 {
+	auto vec = cB.pos - cA.pos;
+	float len = vec.Length();
+	float radius2 = cA.radius + cB.radius;
 
-	return false;
+	return len <= radius2;
 }
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

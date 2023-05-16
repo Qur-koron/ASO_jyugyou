@@ -31,7 +31,7 @@ public:
 	void UpdateBlast(void);
 	void UpdateEnd(void);
 	// •`‰æ
-	void Draw();
+	void Draw(void);
 	void DrawShot(void);
 	void DrawBlast(void);
 	void DrawEnd(void);

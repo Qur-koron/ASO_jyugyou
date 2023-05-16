@@ -139,6 +139,10 @@ void EnemyBase::SetAlive(bool alive)
 void EnemyBase::Damage(int damage)
 {
 	hp_ -= damage;
+	if (hp_ <= 0)
+	{
+		isAlive_ = false;
+	}
 }
 
 VECTOR EnemyBase::GetCollisionPos(void)

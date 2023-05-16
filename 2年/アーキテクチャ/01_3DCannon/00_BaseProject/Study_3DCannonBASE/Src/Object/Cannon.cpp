@@ -23,22 +23,28 @@ void Cannon::Init(void)
 	standPos_ = { 0.0f, 10.0f, -200.0f };
 	standRot_ = { 0.0f, 0.0f, 0.0f };
 
+	// 土台からの相対座標とする
+	barrelLocalPos_ = { 0.0f, 100.0f, 0.0f };
+
 	// Barrelモデル読み込み
 	// 外部ファイルの３Ｄモデルをロード
 	barrelModelId_ = MV1LoadModel(
 		(Application::PATH_MODEL + "Cannon/Barrel.mv1").c_str());
 	barrelScl_ = { 0.8f, 0.8f, 0.8f };
 	//barrelPos_ = { 0.0f, 110.0f, -200.0f };
+	// 普通
+	barrelPos_ = VAdd(standPos_, barrelLocalPos_);
 	barrelRot_ = { 0.0f, 0.0f, 0.0f };
-
-	// 土台からの相対座標とする
-	barrelLocalPos_ = { 0.0f, 100.0f, 0.0f };
 
 	// 弾のモデル
 	shotModelId_ =MV1LoadModel(
 		(Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
 	// 弾発射の硬直時間
 	stepShotDelay_ = 0.0f;
+
+	// 爆発エフェクト読み込み
+	LoadDivGraph((Application::PATH_IMAGE + "Blast.png").c_str(),
+		BLAST_ANIM_NUM, 4, 4, BLAST_SIZE_X, BLAST_SIZE_Y, blastImgs_, true);
 
 	// 3Dモデルに制御情報を反映させる
 	Update();
@@ -52,9 +58,6 @@ void Cannon::Update(void)
 
 	// 発射操作
 	ProcessShot();
-
-	// VECTOR同士の加算 VAdd関数
-	barrelPos_ = VAdd(standPos_, barrelLocalPos_);
 
 	// ３Ｄモデルの大きさを設定(引数は、x, y, zの倍率)
 	MV1SetScale(standModelId_, standScl_);
@@ -74,17 +77,17 @@ void Cannon::Update(void)
 void Cannon::Draw(void)
 {
 	// 弾の発射位置
-	VECTOR pos = barrelPos_;
+	//VECTOR pos = barrelPos_;
 	// 砲身からの相対座標
-	VECTOR localPos = { 0.0f, 25.0f, 30.0f };
+	//VECTOR localPos = { 0.0f, 25.0f, 30.0f };
 	// ローカル座標からワールド座標へ変換
-	pos = VAdd(pos, localPos);
+	//pos = VAdd(pos, localPos);
 	// 弾の発射位置目安
-	DrawSphere3D(pos, 10.0f, 10, 0x00ff00, 0x00ff00, true);
+	//DrawSphere3D(pos, 10.0f, 10, 0x00ff00, 0x00ff00, true);
 	// 砲台のモデル描画
 	MV1DrawModel(standModelId_);
 	// 砲身のモデル描画(一時的に半透明にする)
-	MV1SetMaterialDifColor(barrelModelId_, 0, GetColorF(1.0f, 1.0f, 1.0f, 0.5f));
+	//MV1SetMaterialDifColor(barrelModelId_, 0, GetColorF(1.0f, 1.0f, 1.0f, 0.5f));
 	MV1DrawModel(barrelModelId_);
 
 }
@@ -101,6 +104,12 @@ void Cannon::Release(void)
 	{
 		shot->Release();
 		delete shot;
+	}
+
+	// 読み込んだ画像の解放
+	for (int i = 0; i < BLAST_ANIM_NUM; i++)
+	{
+		DeleteGraph(blastImgs_[i]);
 	}
 
 }
@@ -133,10 +142,23 @@ void Cannon::ProcessShot(void)
 		// 弾を生成(方向は仮で正面方向)
 		//shot->CreateShot(barrelPos_, { 0.0f, 0.0f, 1.0f });
 		
-		// 方向と同じ要領で、相対座標を回転
-		VECTOR localPosRot = VTransform(, matRot);
+		// 回転行列を使用して、ベクトルを回転させる
+		VECTOR dir = VTransform({ 0.0f, 0.0f, 1.0f }, matRot);
 
+		// 弾の発射位置
+		VECTOR pos = barrelPos_;
+
+		// 砲身からの相対座標
+		VECTOR localPos = { 0.0f, 25.0f, 30.0f };
+
+		// 方向と同じ要領で、相対座標を回転
+		VECTOR localPosRot = VTransform(localPos, matRot);
+
+		// ローカル座標からワールド座標へ変換
 		pos = VAdd(pos, localPosRot);
+
+		// 弾を生成(方向は仮で正面方向)
+		shot->CreateShot(pos, dir);
 
 		// 弾発射後の硬直時間セット
 		stepShotDelay_ = SHOT_DELAY;
@@ -154,10 +176,9 @@ void Cannon::ProcessShot(void)
 ShotBase* Cannon::GetValidShot(void)
 {
 	size_t size = shots_.size();
-
 	for (int i = 0; i < size; i++)
 	{
-		if (!shots_[i]->IsAlive())
+		if (!shots_[i]->IsShot())
 		{
 			return shots_[i];
 		}
@@ -172,7 +193,7 @@ ShotBase* Cannon::GetValidShot(void)
 
 void Cannon::ProcessPot(void)
 {
-	// 
+	// InputManager& ins = InputManager::GetInstance();
 	auto& ins = InputManager::GetInstance();
 
 	// 回転量

@@ -37,11 +37,12 @@ void GameScene::Init(void)
 
 	// ゲームオーバー地点
 	gameoverPoint_ = { 450.0f, 30.0f, 75.0f };
+
 	// ゲームオーバー判定
 	isGameover_ = false;
+
 	// ゲームオーバー画像
-	imgGameover_ =
-		LoadGraph((Application::PATH_IMAGE + "Gameover.png").c_str());
+	imgGameover_ = LoadGraph((Application::PATH_IMAGE + "Gameover.png").c_str());
 
 	// カメラをフリーモードにする
 	//SceneManager::GetInstance().GetCamera()->ChangeMode(Camera::MODE::FREE);
@@ -81,9 +82,7 @@ void GameScene::Update(void)
 		}
 
 		// ステージモデルと球体の衝突判定
-		auto info = MV1CollCheck_Sphere(
-			stageModelId, -1, shot->GetPos(), ShotBase::COL_RADIUS);
-
+		auto info = MV1CollCheck_Sphere(stageModelId, -1, shot->GetPos(), ShotBase::COL_RADIUS);
 		if (info.HitNum > 0)
 		{
 			// 衝突している
@@ -99,7 +98,7 @@ void GameScene::Update(void)
 			// 球体と球体の衝突判定
 			if(AsoUtility::IsHitSpheres(
 				enemy->GetCollisionPos(), enemy->GetCollisionRadius(), 
-				gameoverPoint_, OVER_COL_RADIUS))
+				shot->GetPos(), shot->COL_RADIUS))
 			{
 				// 敵にダメージを与える
 				enemy->Damage(1);
@@ -107,16 +106,22 @@ void GameScene::Update(void)
 				break;
 			}
 		}
-
 	}
 
 	for (auto enemy : enemys_)
 	{
 		enemy->Update();
-	}
 
-	// ゲームオーバー判定
-	//if()
+		// ゲームオーバー判定
+		// 球体と球体の衝突判定
+		if (AsoUtility::IsHitSpheres(
+			enemy->GetCollisionPos(), enemy->GetCollisionRadius(),
+			gameoverPoint_, OVER_COL_RADIUS))
+		{
+			isGameover_ = true;
+			break;
+		}
+	}
 
 }
 
@@ -135,17 +140,28 @@ void GameScene::Draw(void)
 	for (auto shot : shots)
 	{
 		shot->Draw();
+		// デバッグ用
+		if (shot->IsAlive())
+		{
+			DrawSphere3D(shot->GetPos(), shot->COL_RADIUS, 10, 0xff0000, 0xff0000, false);
+		}
 	}
 
+	// デバッグ用
 	for (auto enemy : enemys_)
 	{
-		DrawSphere3D(enemy->GetCollisionPos(), 
-			enemy->GetCollisionRadius(), 10, 
-			0xff0000, 0xff0000, false);
+		DrawSphere3D(enemy->GetCollisionPos(), enemy->GetCollisionRadius(), 10, 0xff0000, 0xff0000, false);
 	}
 
+	// デバッグ用
+	DrawSphere3D(gameoverPoint_, OVER_COL_RADIUS, 10, 0xff0000, 0xff0000, false);
+
 	// ゲームオーバー画像の表示
-	// ？？？
+	if (isGameover_)
+	{
+		// ゲームオーバー画像
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, imgGameover_, true);
+	}
 
 }
 
