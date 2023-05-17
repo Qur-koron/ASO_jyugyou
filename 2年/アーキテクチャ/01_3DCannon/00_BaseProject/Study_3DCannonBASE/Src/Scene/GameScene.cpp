@@ -39,6 +39,12 @@ void GameScene::Init(void)
 	gameoverPoint_ = { 450.0f, 30.0f, 75.0f };
 
 	// ゲームオーバー判定
+	isGameclear_ = false;
+
+	// ゲームオーバー画像
+	imgGameclear_ = LoadGraph((Application::PATH_IMAGE + "GameClear.png").c_str());
+
+	// ゲームオーバー判定
 	isGameover_ = false;
 
 	// ゲームオーバー画像
@@ -56,6 +62,11 @@ void GameScene::Update(void)
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+	}
+	if (isGameclear_)
+	{
+		// ゲームクリアなら処理しない
+		return;
 	}
 	if (isGameover_)
 	{
@@ -121,6 +132,13 @@ void GameScene::Update(void)
 			isGameover_ = true;
 			break;
 		}
+
+		// ゲームクリア判定
+		if (!enemy->IsAlive())
+		{
+			isGameclear_ = true;
+			break;
+		}
 	}
 
 }
@@ -156,6 +174,13 @@ void GameScene::Draw(void)
 	// デバッグ用
 	DrawSphere3D(gameoverPoint_, OVER_COL_RADIUS, 10, 0xff0000, 0xff0000, false);
 
+	// ゲームクリア画像の表示
+	if (isGameclear_)
+	{
+		// ゲームクリア画像
+		DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, imgGameclear_, true);
+	}
+
 	// ゲームオーバー画像の表示
 	if (isGameover_)
 	{
@@ -177,5 +202,9 @@ void GameScene::Release(void)
 	{
 		enemy->Release();
 	}
+
+	DeleteGraph(imgGameclear_);
+
+	DeleteGraph(imgGameover_);
 
 }

@@ -26,6 +26,10 @@ public:
 
 private:
 
+	// ゲームクリア判定
+	bool isGameclear_;
+	// ゲームクリア画像
+	int imgGameclear_;
 	// ゲームオーバー判定
 	bool isGameover_;
 	// ゲームオーバー画像

@@ -28,7 +28,7 @@ void Grid::Draw(void)
 	VECTOR ePos = { 0.0f, HLEN, 0.0f };
 	DrawLine3D(sPos, ePos, 0x00ff00);
 
-	for (float pos = HLEN; pos < -HLEN; pos -= TERM)
+	for (float pos = -HLEN; pos < HLEN; pos += TERM)
 	{
 		VECTOR sPos = { -HLEN, 0.0f, pos };
 		VECTOR ePos = { HLEN, 0.0f, pos };
