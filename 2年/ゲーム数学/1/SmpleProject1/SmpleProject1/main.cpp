@@ -55,20 +55,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	char ketatate[256];
 	constexpr float speed = 2.0f;
 
-	while (ProcessMessage() != -1) {
+	while (ProcessMessage() != -1) 
+	{
 		GetHitKeyStateAll(ketatate);
 		ClearDrawScreen();
 
-		if (ketatate[KEY_INPUT_LEFT]) {
+		if (ketatate[KEY_INPUT_LEFT]) 
+		{
 			pop.pos.x -= speed;
 		}
-		if (ketatate[KEY_INPUT_RIGHT]) {
+		if (ketatate[KEY_INPUT_RIGHT]) 
+		{
 			pop.pos.x += speed;
 		}
-		if (ketatate[KEY_INPUT_UP]) {
+		if (ketatate[KEY_INPUT_UP]) 
+		{
 			pop.pos.y -= speed;
 		}
-		if (ketatate[KEY_INPUT_DOWN]) {
+		if (ketatate[KEY_INPUT_DOWN]) 
+		{
 			pop.pos.y += speed;
 		}
 
