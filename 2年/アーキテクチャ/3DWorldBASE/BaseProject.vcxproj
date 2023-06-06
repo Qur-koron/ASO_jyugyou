@@ -158,6 +158,8 @@
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Quaternion.cpp" />
+    <ClCompile Include="Src\Object\Player.cpp" />
+    <ClCompile Include="Src\Object\Stage.cpp" />
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
     <ClCompile Include="Src\Manager\Camera.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />
@@ -172,6 +174,8 @@
   <ItemGroup>
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Quaternion.h" />
+    <ClInclude Include="Src\Object\Player.h" />
+    <ClInclude Include="Src\Object\Stage.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
     <ClInclude Include="Src\Manager\Camera.h" />
     <ClInclude Include="Src\Common\Fader.h" />
